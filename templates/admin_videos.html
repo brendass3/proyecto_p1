@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gestión Videos</title>
+        <link rel="stylesheet" href="/static/css/style.css">
+
+    
+</head>
+<body>
+    <nav class="navbar">
+        <h1> Gestionar Videos</h1>
+        <div class="user-info">
+            <span class="username"> {{ username }}</span>
+            <a href="/admin/home" class="btn btn-back"> Volver</a>
+            <button class="btn btn-logout" onclick="logout()"> Salir</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="section">
+            <h3>Crear Nuevo Video</h3>
+            <div id="message"></div>
+            <form id="createForm">
+                <div class="form-group"><label>Título:</label><input type="text" id="createTitulo" required /></div>
+                <div class="form-group"><label>URL Embed (YouTube):</label><input type="text" id="createUrl" placeholder="https://www.youtube.com/embed/VIDEO_ID" required /></div>
+                <div class="form-group"><label>Descripción:</label><input type="text" id="createDescripcion" /></div>
+                <button type="submit" class="btn-submit">Crear Video</button>
+            </form>
+        </div>
+        <div class="section">
+            <h3> Lista de Videos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>URL Embed</th>
+                        <th>Activo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for video in videos %}
+                    <tr>
+                        <td>{{ video._id }}</td>
+                        <td>{{ video.titulo }}</td>
+                        <td>{{ video.url_embed }}</td>
+                        <td>{{ video.activo }}</td>
+                        <td>
+                            <a href="/admin/videos/editar/{{ video._id }}">Editar</a>
+                            <a href="/admin/videos/eliminar/{{ video._id }}">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        async function loadVideos() { const response = await fetch('/admin/videos'); const data = await response.json(); const tbody = document.getElementById('videosList'); tbody.innerHTML = ''; data.videos.forEach(v => { tbody.innerHTML += `<tr><td>${v.id.substring(0,8)}</td><td>${v.titulo}</td><td>${v.url_embed.substring(0,30)}</td><td>${v.activo ? '✓' : '✗'}</td><td><button class="btn-action btn-edit" onclick="editVideo('${v.id}')">Editar</button><button class="btn-action btn-delete" onclick="deleteVideo('${v.id}')">Eliminar</button></td></tr>`; }); }
+        document.getElementById('createForm').addEventListener('submit', async (e) => { e.preventDefault(); const response = await fetch('/admin/videos', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({titulo: document.getElementById('createTitulo').value, url_embed: document.getElementById('createUrl').value, descripcion: document.getElementById('createDescripcion').value})}); const data = await response.json(); showMessage(data.message || data.error, data.error ? 'error' : 'success'); if (!data.error) { document.getElementById('createForm').reset(); loadVideos(); } });
+        async function deleteVideo(id) { if (!confirm('¿Eliminar video?')) return; const response = await fetch(`/admin/videos/${id}`, {method: 'DELETE'}); const data = await response.json(); showMessage(data.message, 'success'); loadVideos(); }
+        function showMessage(msg, type) { const div = document.getElementById('message'); div.textContent = msg; div.className = type; div.style.display = 'block'; }
+        async function logout() { await fetch('/logout', {method: 'POST'}); window.location.href = '/'; }
+        loadVideos();
+    </script>
+</body>
+</html>

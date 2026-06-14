@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Usuario</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Editar Usuario</h1>
+        <div class="user-info">
+            <span class="username"> {{ username }}</span>
+            <a href="/admin/usuarios" class="btn btn-back"> Volver</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="section">
+            <form method="POST">
+                <input type="hidden" name="user_id" value="{{ usuario._id }}">
+                <div>
+                    <label>Username:</label>
+                    <input type="text" name="username" value="{{ usuario.username }}" required>
+                </div>
+                <div>
+                    <label>Password:</label>
+                    <input type="password" name="password" value="{{ usuario.password }}">
+                </div>
+                <div>
+                    <label>Tipo:</label>
+                    <select name="user_type">
+                        <option value="user" {% if usuario.user_type == 'user' %}selected{% endif %}>Usuario</option>
+                        <option value="admin" {% if usuario.user_type == 'admin' %}selected{% endif %}>Administrador</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Activo:</label>
+                    <select name="activo">
+                        <option value="true" {% if usuario.activo %}selected{% endif %}>Sí</option>
+                        <option value="false" {% if not usuario.activo %}selected{% endif %}>No</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-submit">Actualizar</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

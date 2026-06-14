@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gestión Rompecabezas</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1> Gestionar Rompecabezas</h1>
+        <div class="user-info">
+            <span class="username"> {{ username }}</span>
+            <a href="/admin/home" class="btn btn-back"> Volver</a>
+            <button class="btn btn-logout" onclick="logout()"> Salir</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="section">
+            <h3> Lista de Rompecabezas</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ID Usuario</th>
+                        <th>Imagen ID</th>
+                    
+                        <th>Tamaño</th>
+                        <th>Activo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for puzzle in puzzles %}
+                    <tr>
+                        <td>{{ puzzle._id }}</td>
+                        <td>{{ puzzle.user_id }}</td>
+                        <td>{{ puzzle.image_id }}</td>
+                        <td>{{ puzzle.grid_size }}</td>
+                        <td>{{ puzzle.activo }}</td>
+                        <td>
+                            <a href="/admin/rompecabezas/eliminar/{{ puzzle._id }}">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        async function loadRompecabezas() {
+            const data = await (await fetch('/admin/rompecabezas')).json();
+            const tbody = document.getElementById('rompecabezasList');
+            tbody.innerHTML = '';
+            data.rompecabezas.forEach(r => {
+                tbody.innerHTML += `<tr>
+                    <td>${r._id.substring(0,8)}</td>
+                    <td>${r.user_id.substring(0,8)}</td>
+                    <td>${r.image_id.substring(0,8)}</td>
+                    <td>${r.grid_size}×${r.grid_size}</td>
+                    <td>${r.status}</td>
+                    <td><button class="btn-action btn-delete" onclick="deleteRompecabeza('${r._id}')">Eliminar</button></td>
+                </tr>`;
+            });
+        }
+        async function deleteRompecabeza(id) {
+            if (!confirm('¿Eliminar?')) return;
+            showMessage((await (await fetch(`/admin/rompecabezas/${id}`, {method: 'DELETE'})).json()).message, 'success');
+            loadRompecabezas();
+        }
+        function showMessage(msg, type) { const div = document.getElementById('message'); div.textContent = msg; div.className = type; div.style.display = 'block'; }
+        async function logout() { await fetch('/logout', {method: 'POST'}); window.location.href = '/'; }
+        loadRompecabezas();
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicación - Proyecto Web</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1> Explicación</h1>
+        <div class="user-info">
+            <span class="username"> {{ username }}</span>
+            <a href="/user_home" class="btn btn-back"> Volver</a>
+            <button class="btn btn-logout" onclick="logout()"> Salir</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="section">
+            <h2> Cómo Funciona Esta Plataforma</h2>
+            <p>Funciona asi</p>
+        </div>
+    </div>
+    <script>
+        async function logout() { await fetch('/logout', {method: 'POST'}); window.location.href = '/'; }
+    </script>
+</body>
+</html>

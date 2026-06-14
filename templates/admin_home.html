@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Inicio</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1> Panel Administrativo</h1>
+        <div class="user-info">
+            <span class="username"> {{ username }}</span>
+            <a href="/" class="btn btn-back">Volver</a>
+            <button class="btn btn-logout" onclick="logout()"> Salir</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="section">
+            <h2> Estadísticas Generales</h2>
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px;">
+                <div class="stat-card"><h4>{{ usuarios_count }}</h4><p>Usuarios</p></div>
+                <div class="stat-card"><h4>{{ puzzles_count }}</h4><p>Rompecabezas</p></div>
+                <div class="stat-card"><h4>{{ cursos_count }}</h4><p>Cursos</p></div>
+                <div class="stat-card"><h4>{{ videos_count }}</h4><p>Videos</p></div>
+                <div class="stat-card"><h4>{{ images_count }}</h4><p>Imágenes</p></div>
+            </div>
+        </div>
+        <div class="section">
+            <h3> Acciones Disponibles</h3>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                <div class="card"><div class="card-icon"></div><h4>Usuarios</h4><button class="btn" onclick="window.location.href='/admin/usuarios'">Gestionar</button></div>
+                <div class="card"><div class="card-icon"></div><h4>Cursos</h4><button class="btn" onclick="window.location.href='/admin/cursos'">Gestionar</button></div>
+                <div class="card"><div class="card-icon"></div><h4>Videos</h4><button class="btn" onclick="window.location.href='/admin/videos'">Gestionar</button></div>
+                <div class="card"><div class="card-icon"></div><h4>Imágenes</h4><button class="btn" onclick="window.location.href='/admin/imagenes'">Gestionar</button></div>
+                <div class="card"><div class="card-icon"></div><h4>Rompecabezas</h4><button class="btn" onclick="window.location.href='/admin/rompecabezas'">Gestionar</button>
+</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        async function logout() { await fetch('/logout', {method: 'POST'}); window.location.href = '/'; }
+    </script>
+</body>
+</html>

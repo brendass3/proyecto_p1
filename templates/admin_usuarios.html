@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gestión Usuarios</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1> Gestionar Usuarios</h1>
+        <div class="user-info">
+            <span class="username"> {{ username }}</span>
+            <a href="/admin/home" class="btn btn-back"> Volver</a>
+            <button class="btn btn-logout" onclick="logout()"> Salir</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="section">
+            <h3>Crear Nuevo Usuario</h3>
+            <div id="message"></div>
+            <form id="createForm">
+                <input type="text" id="createUsername" placeholder="Username" required />
+                <input type="password" id="createPassword" placeholder="Password" required />
+                <div style="margin: 15px 0; display: flex; gap: 10px;">
+                    <button type="button" class="type-btn active" data-type="user" onclick="setUserType('user')">Usuario</button>
+                    <button type="button" class="type-btn" data-type="admin" onclick="setUserType('admin')">Administrador</button>
+                </div>
+                <input type="hidden" id="userType" value="user" />
+                <button type="submit" class="btn btn-submit">Crear Usuario</button>
+            </form>
+        </div>
+        <div class="section">
+            <h3> Lista de Usuarios</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Tipo</th>
+                        <th>Activo</th>
+                        <th>Acciones</th></tr>
+
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario._id }}</td>
+                        <td>{{ usuario.username }}</td>
+                        <td>{{ usuario.user_type }}</td>
+                        <td>{{ usuario.activo }}</td>
+                        <td>
+                            <a href="/admin/usuarios/editar/ {{ usuario._id }} ">Editar</a>
+                            <a href="/admin/usuarios/eliminar/ {{ usuario._id }} ">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        let userType = 'user';
+        function setUserType(type) { userType = type; document.getElementById('userType').value = type; document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); document.querySelector(`[data-type="${type}"]`).classList.add('active'); }
+        async function loadUsuarios() {
+            const data = await (await fetch('/admin/usuarios')).json();
+            const tbody = document.getElementById('usuariosList');
+            tbody.innerHTML = '';
+            data.usuarios.forEach(u => {
+                tbody.innerHTML += `<tr>
+                    <td>${u._id.substring(0,8)}</td>
+                    <td>${u.username}</td>
+                    <td>${u.user_type}</td>
+                    <td>${u.activo ? '✓' : '✗'}</td>
+                    <td><button class="btn-action btn-delete" onclick="deleteUsuario('${u._id}')">Eliminar</button></td>
+                </tr>`;
+            });
+        }
+        document.getElementById('createForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const response = await fetch('/admin/usuarios', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: document.getElementById('createUsername').value, password: document.getElementById('createPassword').value, user_type: userType})
+            });
+            const data = await response.json();
+            showMessage(data.message || data.error, data.error ? 'error' : 'success');
+            if (!data.error) { document.getElementById('createForm').reset(); loadUsuarios(); }
+        });
+        async function deleteUsuario(id) {
+            if (!confirm('¿Eliminar?')) return;
+            const response = await fetch(`/admin/usuarios/${id}`, {method: 'DELETE'});
+            showMessage((await response.json()).message, 'success');
+            loadUsuarios();
+        }
+        function showMessage(msg, type) { const div = document.getElementById('message'); div.textContent = msg; div.className = type; div.style.display = 'block'; }
+        async function logout() { await fetch('/logout', {method: 'POST'}); window.location.href = '/'; }
+        loadUsuarios();
+    </script>
+</body>
+</html>

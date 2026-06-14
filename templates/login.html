@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Proyecto Web</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .form-container { position: absolute; top: 0; height: 100%; transition: all 0.6s ease-in-out; }
+        .sign-in-container { left: 0; width: 50%; z-index: 2; }
+        .sign-up-container { left: 0; width: 50%; opacity: 0; z-index: 1; }
+        .inner-form-block { background: var(--gradient-card); display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 0 50px; height: 100%; text-align: center; }
+        h1 { font-size: 2.3rem; color: var(--metal-green); font-weight: 700; margin-bottom: 15px; }
+        span { font-size: 13px; color: var(--metal-green-light); margin-bottom: 20px; }
+        .btn { border-radius: 25px; border: 2px solid var(--metal-green); background: var(--gradient-primary); color: var(--text-dark); font-size: 13px; font-weight: bold; padding: 12px 50px; cursor: pointer; transition: all 0.3s; margin-top: 15px; }
+        .btn:hover { background: var(--gradient-dark); transform: translateY(-2px); }
+        .type-selector { margin: 15px 0; display: flex; gap: 10px; }
+        .type-btn { padding: 8px 20px; border: 2px solid var(--metal-green); background: var(--bg-dark); color: var(--metal-green-light); border-radius: 15px; cursor: pointer; font-size: 12px; }
+        .type-btn.active { background: var(--gradient-primary); color: var(--text-dark); }
+        .overlay-container { position: absolute; top: 0; left: 50%; width: 50%; height: 100%; overflow: hidden; transition: transform 0.6s ease-in-out; z-index: 100; }
+        .overlay { background: var(--gradient-primary); color: var(--text-dark); position: relative; left: -100%; height: 100%; width: 200%; transform: translateX(0); transition: transform 0.6s ease-in-out; }
+        .overlay-panel { position: absolute; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 0 40px; text-align: center; top: 0; height: 100%; width: 50%; transform: translateX(0); transition: transform 0.6s ease-in-out; }
+        .overlay-left { transform: translateX(-20%); border-top-right-radius: 40% 50%; border-bottom-right-radius: 40% 50%; padding-right: 80px; }
+        .overlay-right { right: 0; transform: translateX(0); border-top-left-radius: 40% 50%; border-bottom-left-radius: 40% 50%; padding-left: 80px; }
+        p { font-size: 14px; line-height: 22px; margin-bottom: 30px; opacity: 0.95; }
+        h2 { font-size: 2.3rem; font-weight: 600; margin-bottom: 20px; }
+        .container.right-panel-active .overlay-container { transform: translateX(-100%); }
+        .container.right-panel-active .overlay { transform: translateX(50%); }
+        .container.right-panel-active .sign-in-container { transform: translateX(100%); }
+        .container.right-panel-active .sign-up-container { transform: translateX(100%); opacity: 1; z-index: 5; }
+        .error-msg { color: #ff6b6b; font-size: 13px; margin: 10px 0; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <div class="form-container sign-up-container">
+            <div class="inner-form-block">
+                <h1>Registrarse</h1>
+                <span>usa tu coreo para registrarte</span>
+                <form id="signupForm">
+                    <input type="text" id="signupUsername" placeholder="Usuario" required />
+                    <input type="password" id="signupPassword" placeholder="Contraseña" required />
+                    <div class="type-selector">
+                        <button type="button" class="type-btn active" data-type="user">Usuario</button>
+                        <button type="button" class="type-btn" data-type="admin">Administrador</button>
+                    </div>
+                    <div class="error-msg" id="signupError"></div>
+                    <button type="submit" class="btn">REGISTRARSE</button>
+                </form>
+            </div>
+        </div>
+        <div class="form-container sign-in-container">
+            <div class="inner-form-block">
+                <h1>Iniciar Sesión</h1>
+                <span>usa tu usuario y contraseña</span>
+                <form id="signinForm">
+                    <input type="text" id="signinUsername" placeholder="Usuario" required />
+                    <input type="password" id="signinPassword" placeholder="Contraseña" required />
+                    <div class="type-selector">
+                        <button type="button" class="type-btn active" data-type="user">Usuario</button>
+                        <button type="button" class="type-btn" data-type="admin">Administrador</button>
+                    </div>
+                    <div class="error-msg" id="signinError"></div>
+                    <button type="submit" class="btn">INICIAR SESIÓN</button>
+                </form>
+            </div>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h2>Bienvenido/a de nuevo!</h2>
+                    <p>Para mantenerte conectado con nosotros, inicia sesion con tu información</p>
+                    <button class="btn" id="signIn">Iniciar sesión</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h2>Holaaa!</h2>
+                    <p>Ingresa tus datos y comienza tu viaje con nosostros</p>
+                    <button class="btn" id="signUp">Registrarse</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const container = document.getElementById('mainContainer');
+        let currentUserType = 'user';
+        document.getElementById('signUp').addEventListener('click', () => container.classList.add('right-panel-active'));
+        document.getElementById('signIn').addEventListener('click', () => container.classList.remove('right-panel-active'));
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentUserType = this.dataset.type;
+            });
+        });
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const response = await fetch('/register', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: document.getElementById('signupUsername').value, password: document.getElementById('signupPassword').value, user_type: currentUserType})
+            });
+            const data = await response.json();
+            if (data.error) { document.getElementById('signupError').textContent = data.error; document.getElementById('signupError').style.display = 'block'; }
+            else { alert('Usuario creado! Ahora haz login'); container.classList.remove('right-panel-active'); }
+        });
+        document.getElementById('signinForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const response = await fetch('/login', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: document.getElementById('signinUsername').value, password: document.getElementById('signinPassword').value, user_type: currentUserType})
+            });
+            const data = await response.json();
+            if (data.error) { document.getElementById('signinError').textContent = data.error; document.getElementById('signinError').style.display = 'block'; }
+            else { window.location.href = data.redirect; }
+        });
+    </script>
+</body>
+</html>

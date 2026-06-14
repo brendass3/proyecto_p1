@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gestión Imágenes</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1> Gestionar Imágenes</h1>
+        <div class="user-info">
+            <span class="username"> {{ username }}</span>
+            <a href="/admin/home" class="btn btn-back">Volver</a>
+            <button class="btn btn-logout" onclick="logout()"> Salir</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="section">
+            <h3>Crear Nueva Imagen</h3>
+            <div id="message"></div>
+            <form id="createForm">
+                <input type="text" id="createNombre" placeholder="Nombre" required />
+                <input type="text" id="createDescripcion" placeholder="Descripción" />
+                <div style="margin: 15px 0;">
+                    <label>Imagen:</label>
+                    <input type="file" id="createImagen" accept="image/*" required />
+                    <img id="previewImagen" style="max-width: 200px; margin: 10px 0; display: none; border-radius: 10px;" />
+                </div>
+                <button type="submit" class="btn btn-submit">Crear Imagen</button>
+            </form>
+        </div>
+        <div class="section">
+            <h3> Lista de Imágenes</h3>
+            <table>
+            <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Imagen</th>
+                        <th>Activo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for imagen in imagenes %}
+                    <tr>
+                        <td>{{ imagen._id }}</td>
+                        <td>{{ imagen.nombre }}</td>
+                        <td>{{ imagen.descripcion }}</td>
+                        <td><img src="data:image/jpeg;base64,{{ imagen.imagen_base64 }}" width="50"></td>
+                        <td>{{ imagen.activo }}</td>
+                        <td>
+                            <a href="/admin/imagenes/editar/{{ imagen._id }}">Editar</a>
+                            <a href="/admin/imagenes/eliminar/{{ imagen._id }}">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        let imagenBase64 = '';
+        document.getElementById('createImagen').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImagen').src = e.target.result;
+                    document.getElementById('previewImagen').style.display = 'block';
+                    imagenBase64 = e.target.result.split(',')[1];
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        async function loadImagenes() {
+            const data = await (await fetch('/admin/imagenes')).json();
+            const tbody = document.getElementById('imagenesList');
+            tbody.innerHTML = '';
+            data.imagenes.forEach(i => {
+                tbody.innerHTML += `<tr>
+                    <td>${i._id.substring(0,8)}</td>
+                    <td>${i.nombre}</td>
+                    <td>${i.descripcion}</td>
+                    <td>${i.activo ? '✓' : '✗'}</td>
+                    <td><button class="btn-action btn-delete" onclick="deleteImagen('${i._id}')">Eliminar</button></td>
+                </tr>`;
+            });
+        }
+        document.getElementById('createForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!imagenBase64) { showMessage('Selecciona una imagen', 'error'); return; }
+            const response = await fetch('/admin/imagenes', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({nombre: document.getElementById('createNombre').value, descripcion: document.getElementById('createDescripcion').value, imagen_base64: imagenBase64})
+            });
+            const data = await response.json();
+            showMessage(data.message || data.error, data.error ? 'error' : 'success');
+            if (!data.error) { document.getElementById('createForm').reset(); document.getElementById('previewImagen').style.display = 'none'; imagenBase64 = ''; loadImagenes(); }
+        });
+        async function deleteImagen(id) {
+            if (!confirm('¿Eliminar?')) return;
+            showMessage((await (await fetch(`/admin/imagenes/${id}`, {method: 'DELETE'})).json()).message, 'success');
+            loadImagenes();
+        }
+        function showMessage(msg, type) { const div = document.getElementById('message'); div.textContent = msg; div.className = type; div.style.display = 'block'; }
+        async function logout() { await fetch('/logout', {method: 'POST'}); window.location.href = '/'; }
+        loadImagenes();
+    </script>
+</body>
+</html>

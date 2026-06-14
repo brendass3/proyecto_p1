@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gestión Cursos</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1> Gestionar Cursos</h1>
+        <div class="user-info">
+            <span class="username"> {{ username }}</span>
+            <a href="/admin/home" class="btn btn-back"> Volver</a>
+            <button class="btn btn-logout" onclick="logout()"> Salir</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="section">
+            <h3> Crear Nuevo Curso</h3>
+            <div id="message"></div>
+            <form id="createForm">
+                <input type="text" id="createTitulo" placeholder="Título" required />
+                <input type="text" id="createDescripcion" placeholder="Descripción" required />
+                <input type="text" id="createContenido" placeholder="Contenido" />
+                <div style="margin: 15px 0;">
+                    <label>Infografía (Imagen):</label>
+                    <input type="file" id="createInfografia" accept="image/*" />
+                    <img id="previewInfografia" style="max-width: 200px; margin: 10px 0; display: none; border-radius: 10px;" />
+                </div>
+                <input type="text" id="createEsquema" placeholder="Esquema" />
+                <button type="submit" class="btn btn-submit">Crear Curso</button>
+            </form>
+        </div>
+        <div class="section">
+            <h3>Lista de Cursos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Activo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for curso in cursos %}
+                    <tr>
+                        <td>{{ curso._id }}</td>
+                        <td>{{ curso.titulo }}</td>
+                        <td>{{ curso.descripcion }}</td>
+                        <td>{{ curso.activo }}</td>
+                        <td>
+                            <a href="/admin/cursos/editar/{{ curso._id }}">Editar</a>
+                            <a href="/admin/cursos/eliminar/{{ curso._id }}">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        let infografiaBase64 = '';
+        document.getElementById('createInfografia').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewInfografia').src = e.target.result;
+                    document.getElementById('previewInfografia').style.display = 'block';
+                    infografiaBase64 = e.target.result.split(',')[1];
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        async function loadCursos() {
+            const data = await (await fetch('/admin/cursos')).json();
+            const tbody = document.getElementById('cursosList');
+            tbody.innerHTML = '';
+            data.cursos.forEach(c => {
+                tbody.innerHTML += `<tr>
+                    <td>${c._id.substring(0,8)}</td>
+                    <td>${c.titulo}</td>
+                    <td>${c.descripcion}</td>
+                    <td>${c.activo ? '✓' : '✗'}</td>
+                    <td><button class="btn-action btn-delete" onclick="deleteCurso('${c._id}')">Eliminar</button></td>
+                </tr>`;
+            });
+        }
+        document.getElementById('createForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const response = await fetch('/admin/cursos', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({titulo: document.getElementById('createTitulo').value, descripcion: document.getElementById('createDescripcion').value, contenido: document.getElementById('createContenido').value, infografia: infografiaBase64, esquema: document.getElementById('createEsquema').value})
+            });
+            const data = await response.json();
+            showMessage(data.message || data.error, data.error ? 'error' : 'success');
+            if (!data.error) { document.getElementById('createForm').reset(); document.getElementById('previewInfografia').style.display = 'none'; infografiaBase64 = ''; loadCursos(); }
+        });
+        async function deleteCurso(id) {
+            if (!confirm('¿Eliminar?')) return;
+            showMessage((await (await fetch(`/admin/cursos/${id}`, {method: 'DELETE'})).json()).message, 'success');
+            loadCursos();
+        }
+        function showMessage(msg, type) { const div = document.getElementById('message'); div.textContent = msg; div.className = type; div.style.display = 'block'; }
+        async function logout() { await fetch('/logout', {method: 'POST'}); window.location.href = '/'; }
+        loadCursos();
+    </script>
+</body>
+</html>

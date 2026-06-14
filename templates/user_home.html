@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuario - Inicio</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1> Proyecto Web</h1>
+        <div class="user-info">
+            <span class="username"> Bienvenido, {{ username }}</span>
+            <a href="/" class="btn btn-back"> Volver</a>
+            <button class="btn btn-logout" onclick="logout()"> Salir</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="section">
+            <h2> Hola, {{ username }}!</h2>
+            <p>Selecciona una opción para continuar</p>
+        </div>
+        <div class="section">
+            <h3> Opciones Disponibles</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <h4>Cursos</h4>
+                    <p>Infografías, esquemas y videos sobre tecnología</p>
+                    <button class="btn btn-option" onclick="window.location.href='/cursos'">Ver Cursos</button>
+                </div>
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <h4>Rompecabezas</h4>
+                    <p>Juega rompecabezas interactivos</p>
+                    <button class="btn btn-option" onclick="window.location.href='/rompecabezas'">Jugar</button>
+                </div>
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <h4>Explicación</h4>
+                    <p>Descubre cómo funciona esta plataforma</p>
+                    <button class="btn btn-option" onclick="window.location.href='/explicacion'">Saber Más</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        async function logout() { await fetch('/logout', {method: 'POST'}); window.location.href = '/'; }
+    </script>
+</body>
+</html>

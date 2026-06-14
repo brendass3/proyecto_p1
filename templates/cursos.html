@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos - Proyecto Web </title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1> Cursos</h1>
+        <div class="user-info">
+            <span class="username"> {{ username }}</span>
+            <a href="/user_home" class="btn btn-back"> Volver</a>
+            <button class="btn btn-logout" onclick="logout()"> Salir</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="section">
+            <h2> Contenido Educativo</h2>
+            <p>Infografías, esquemas y videos sobre tecnología</p>
+        </div>
+        <div class="section">
+            <h3> Cursos Disponibles</h3>
+            <div class="cursos-grid">
+                {% for curso in courses %}
+                <div class="curso-card">
+                    <h4>{{ curso.titulo }}</h4>
+                    <p>{{ curso.descripcion }}</p>
+                    {% if curso.contenido %}
+                    <div class="curso-content">
+                        <h5> Contenido:</h5>
+                        <p>{{ curso.contenido }}</p>
+                    </div>
+                    {% endif %}
+                    {% if curso.infografia %}
+                    <div class="curso-content">
+                        <h5> Infografía:</h5>
+                        <img src="data:image/jpeg;base64,{{ curso.infografia }}" alt="Infografía" class="infografia-img">
+                    </div>
+                    {% endif %}
+                    {% if curso.esquema %}
+                    <div class="curso-content">
+                        <h5> Esquema:</h5>
+                        <p>{{ curso.esquema }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="section">
+            <h3> Videos Educativos</h3>
+            <div class="videos-grid">
+                {% for video in videos %}
+                <div class="video-card">
+                    <h4>{{ video.titulo }}</h4>
+                    <p>{{ video.descripcion }}</p>
+                    <div class="video-container">
+                        <iframe src="{{ video.url_embed }}" allowfullscreen></iframe>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script>
+        async function logout() { await fetch('/logout', {method: 'POST'}); window.location.href = '/'; }
+    </script>
+</body>
+</html>
