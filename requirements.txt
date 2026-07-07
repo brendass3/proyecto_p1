@@ -3,7 +3,6 @@ flask_bcrypt==1.0.1
 pymongo==4.6.0
 requests==2.31.0
 pillow==11.0.0
-bson==0.5.10
 werkzeug==3.0.1
 python-dotenv==1.0.0
 gunicorn==21.2.0
