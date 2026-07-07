@@ -6,11 +6,13 @@ import random
 import base64
 from io import BytesIO
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 app = Flask(__name__)
-app.secret_key = 'web_project_secret_key_2024'
+app.secret_key = os.getenv('SECRET_KEY', 'web_project_secret_key_2024')
 
-client = MongoClient('mongodb://localhost:27017/')
+mongo_uri=os.getenv('MONGO_URI','mongodb://localhost:27017/')
+client = MongoClient(mongo_uri)
 db = client.web_project_db
 
 users_collection = db.users
