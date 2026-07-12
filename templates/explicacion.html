@@ -2,27 +2,349 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explicación - Proyecto Web</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Explicación - Conecta y Aprende</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <nav class="navbar">
-        <h1> Explicación</h1>
-        <div class="user-info">
-            <span class="username"> {{ username }}</span>
-            <a href="/user_home" class="btn btn-back"> Volver</a>
-            <button class="btn btn-logout" onclick="logout()"> Salir</button>
-        </div>
-    </nav>
-    <div class="container">
-        <div class="section">
-            <h2> Cómo Funciona Esta Plataforma</h2>
-            <p>Funciona asi</p>
-        </div>
-    </div>
-    <script>
-        async function logout() { await fetch('/logout', {method: 'POST'}); window.location.href = '/'; }
-    </script>
+
+<div class="container">
+    <h1>📘Explicación general de “Conecta y Aprende”</h1>
+
+    <p>
+        <strong>“Conecta y Aprende”</strong> es una plataforma web diseñada para apoyar a personas en proceso de 
+        <strong>rehabilitación por consumo de drogas y sustancias nocivas</strong>, y al mismo tiempo prepararlas para su 
+        <strong>reinserción en la sociedad</strong>.
+    </p>
+
+    <p>
+        La plataforma ofrece:
+    </p>
+
+    <ul>
+        <li>
+            <strong>Videos educativos y motivacionales</strong> sobre prevención, salud mental y recuperación.
+        </li>
+        <li>
+            <strong>Cursos estructurados</strong> que combinan:
+            <ul>
+                <li>Contenido sobre rehabilitación y cambio de hábitos.</li>
+                <li>Aprendizaje de <strong>herramientas digitales básicas</strong> (manejo de computador, internet, programas útiles, etc.).
+            </ul>
+        </li>
+        <li>
+            <strong>Imágenes y material gráfico</strong> que refuerzan mensajes positivos y facilitan la comprensión.
+        </li>
+        <li>
+            <strong>Actividades interactivas</strong>, como un rompecabezas, para trabajar concentración, atención y habilidades cognitivas.
+        </li>
+    </ul>
+
+    <p>
+        El objetivo es que los usuarios no solo trabajen en su recuperación, sino que también desarrollen habilidades digitales que les ayuden en su vida personal, educativa o laboral después del proceso de rehabilitación.
+    </p>
+
+    <!-- SECCIÓN 1: ¿Qué ofrece la plataforma para el usuario? -->
+    <h2> ¿Qué ofrece la plataforma para el usuario?</h2>
+
+    <h3>1. Videos educativos y de apoyo</h3>
+    <p>
+        La página muestra videos relacionados con:
+    </p>
+    <ul>
+        <li>Información sobre riesgos del consumo de sustancias.</li>
+        <li>Estrategias para manejar adicciones.</li>
+        <li>Consejos de salud mental y emocional.</li>
+        <li>Motivación para mantenerse en recuperación.</li>
+    </ul>
+    <p>
+        Estos videos permiten al usuario:
+    </p>
+    <ul>
+        <li>Informarse de manera clara y accesible.</li>
+        <li>Recibir mensajes de apoyo y motivación.</li>
+        <li>Reflexionar sobre su proceso de cambio.</li>
+    </ul>
+
+    <h3>2. Cursos para rehabilitación y aprendizaje digital</h3>
+    <p>
+        El contenido está organizado en <strong>cursos o módulos</strong> temáticos, que cumplen dos funciones:
+    </p>
+
+    <h4>a) Cursos de rehabilitación y salud</h4>
+    <p>Por ejemplo:</p>
+    <ul>
+        <li>Curso de prevención de consumo.</li>
+        <li>Curso de manejo de emociones.</li>
+        <li>Curso de hábitos saludables.</li>
+        <li>Curso de reconstrucción de vida sin drogas.</li>
+    </ul>
+    <p>En estos cursos, el usuario encuentra:</p>
+    <ul>
+        <li>Lecciones ordenadas.</li>
+        <li>Videos explicativos.</li>
+        <li>Imágenes o ejemplos visuales.</li>
+        <li>Reflexiones o actividades relacionadas con su proceso de recuperación.</li>
+    </ul>
+
+    <h4>b) Cursos de herramientas digitales y reinserción</h4>
+    <p>Por ejemplo:</p>
+    <ul>
+        <li>Curso de uso básico del computador.</li>
+        <li>Curso de navegación por internet.</li>
+        <li>Curso de herramientas de productividad (como editores de texto, calculadoras, etc.).</li>
+        <li>Curso de comunicación digital (correo, mensajería, etc.).</li>
+    </ul>
+    <p>En estos cursos, el usuario aprende:</p>
+    <ul>
+        <li>Cómo usar programas básicos.</li>
+        <li>Cómo buscar información en internet.</li>
+        <li>Cómo interactuar con herramientas digitales comunes.</li>
+        <li>Cómo aplicar esas habilidades en su vida diaria, estudios o trabajo.</li>
+    </ul>
+    <p>
+        Esto permite que el aprendizaje sea más estructurado y útil para su <strong>reinserción social y laboral</strong>.
+    </p>
+
+    <h3>3. Imágenes y material gráfico</h3>
+    <p>
+        Para complementar los videos y cursos, la plataforma incluye:
+    </p>
+    <ul>
+        <li>Imágenes con mensajes positivos.</li>
+        <li>Diagramas sobre procesos de recuperación.</li>
+        <li>Ilustraciones que ayudan a visualizar conceptos como:
+            <ul>
+                <li>Control de impulsos.</li>
+                <li>Manejo de emociones.</li>
+                <li>Uso de herramientas digitales.</li>
+            </ul>
+        </li>
+    </ul>
+    <p>
+        Esto hace que el contenido sea más claro, motivador y fácil de entender, especialmente en temas que requieren apoyo visual.
+    </p>
+
+    <h3>4. Rompecabezas interactivo como actividad terapéutica y educativa</h3>
+    <p>
+        Como actividad práctica, la plataforma tiene un <strong>rompecabezas</strong>. Este puede funcionar como:
+    </p>
+    <ul>
+        <li>Un ejercicio para mejorar la concentración.</li>
+        <li>Una herramienta para trabajar la atención y la memoria.</li>
+        <li>Una actividad relajante que ayuda a reducir ansiedad o estrés.</li>
+        <li>Un reto que refuerza el uso de habilidades lógicas y cognitivas.</li>
+    </ul>
+    <p>
+        El objetivo es que el usuario:
+    </p>
+    <ul>
+        <li>Refuerce habilidades cognitivas.</li>
+        <li>Tenga una actividad tranquila y positiva.</li>
+        <li>Use el tiempo para algo constructivo, en lugar de pensar en el consumo.</li>
+    </ul>
+
+    <!-- SECCIÓN 2: Seguridad y control de acceso -->
+    <h2> Seguridad y control de acceso</h2>
+    <p>
+        La plataforma está diseñada para ser segura y respetuosa:
+    </p>
+    <ul>
+        <li>
+            <strong>Solo usuarios registrados</strong> pueden acceder a todo el contenido.
+        </li>
+        <li>
+            Cada usuario tiene:
+            <ul>
+                <li>Un nombre único.</li>
+                <li>Una password.</li>
+                <li>Un tipo de usuario (por ejemplo: paciente, terapeuta, coordinador).</li>
+            </ul>
+        </li>
+        <li>
+            El sistema verifica las credenciales antes de permitir el acceso.
+        </li>
+        <li>
+            Además, limita lo que cada tipo de usuario puede hacer, según su rol:
+            <ul>
+                <li>Un <strong>paciente</strong> puede ver contenido y hacer actividades.</li>
+                <li>Un <strong>terapeuta o coordinador</strong> puede gestionar usuarios, ver progreso o asignar contenidos.</li>
+            </ul>
+        </li>
+    </ul>
+    <p>
+        Esto garantiza que la información sea utilizada solo por las personas autorizadas y que cada uno tenga las funciones adecuadas a su rol.
+    </p>
+
+    <!-- SECCIÓN 3: Cómo funciona internamente -->
+    <h2> Cómo funciona internamente (explicación sencilla)</h2>
+
+    <h3>1. Backend (Python con Flask)</h3>
+    <p>
+        Es el “cerebro” de la aplicación.
+    </p>
+    <ul>
+        <li>Recibe las solicitudes del usuario (registrarse, iniciar sesión, ver videos, hacer rompecabezas).</li>
+        <li>Verifica si los datos son correctos.</li>
+        <li>Decide qué mostrar o qué acción hacer.</li>
+    </ul>
+
+    <h3>2. Base de datos (MongoDB Atlas)</h3>
+    <p>
+        Guarda:
+    </p>
+    <ul>
+        <li>Usuarios (nombre, password, tipo).</li>
+        <li>Cursos (nombre, descripción, videos, imágenes).</li>
+        <li>Videos (URL, título, descripción).</li>
+        <li>Imágenes (URL, descripción).</li>
+        <li>Datos del rompecabezas.</li>
+    </ul>
+    <p>
+        Está en la nube, lo que permite que la plataforma funcione desde cualquier lugar y que la información no se pierda.
+    </p>
+
+    <h3>3. Frontend (HTML y CSS)</h3>
+    <p>
+        Es lo que el usuario ve: formularios, botones, videos, imágenes, rompecabezas.
+    </p>
+    <ul>
+        <li>Flask genera las páginas dinámicamente.</li>
+        <li>El CSS mejora la presentación para que sea clara y agradable.</li>
+    </ul>
+
+    <h3>4. Hosting (Render)</h3>
+    <p>
+        La aplicación está en <strong>Render</strong>, un servicio en la nube.
+    </p>
+    <ul>
+        <li>La página está disponible en internet.</li>
+        <li>Cualquier persona con el enlace y una cuenta puede acceder.</li>
+    </ul>
+
+    <!-- SECCIÓN 4: Cómo se usa paso a paso -->
+    <h2> Cómo se usa paso a paso</h2>
+
+    <h3>1. Acceder a la página</h3>
+    <p>
+        - Abres el navegador.<br>
+        - Vas a: <code>https://brendomedboss.onrender.com</code>
+    </p>
+
+    <h3>2. Registrarse (si no tienes cuenta)</h3>
+    <p>
+        - En la página principal, buscas “Registrarse”.<br>
+        - Ingresas:
+            <ul>
+                <li>Nombre de usuario.</li>
+                <li>Password.</li>
+                <li>Tipo de usuario (paciente, terapeuta, etc.).</li>
+            </ul>
+        - El sistema guarda tus datos y te crea una cuenta.
+    </p>
+
+    <h3>3. Iniciar sesión</h3>
+    <p>
+        - En la página de login:<br>
+        - Ingresas tu nombre de usuario.<br>
+        - Ingresas tu password.<br>
+        - Si todo es correcto, entras al sistema.
+    </p>
+
+    <h3>4. Usar la plataforma</h3>
+    <p>Una vez dentro, puedes:</p>
+
+    <ul>
+        <li>
+            <strong>Explorar cursos de rehabilitación</strong>:
+            <ul>
+                <li>Vistes los temas sobre prevención, salud mental y hábitos saludables.</li>
+                <li>Puedes elegir uno que te interese.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Explorar cursos de herramientas digitales</strong>:
+            <ul>
+                <li>Vistes cursos sobre uso del computador, internet, programas básicos.</li>
+                <li>Puedes avanzar según tu ritmo.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Ver videos</strong>:
+            <ul>
+                <li>Dentro de cada curso, hay videos relacionados.</li>
+                <li>Puedes dar clic para verlos.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Mirar imágenes</strong>:
+            <ul>
+                <li>También hay imágenes con mensajes positivos o explicativos.</li>
+                <li>Estas ayudan a entender mejor los conceptos y reforzar motivación.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Hacer el rompecabezas</strong>:
+            <ul>
+                <li>En la sección de actividades, hay el rompecabezas.</li>
+                <li>Puedes intentarlo como ejercicio de concentración y relajación.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>5. Finalizar sesión</h3>
+    <p>
+        - Puedes cerrar sesión cuando termines.<br>
+        - Esto protege tu cuenta y garantiza que nadie use tu perfil sin permiso.
+    </p>
+
+    <!-- SECCIÓN 5: Para qué sirve este proyecto -->
+    <h2> Para qué sirve este proyecto</h2>
+    <p>
+        Este proyecto sirve como:
+    </p>
+
+    <h3>Apoyo en el proceso de rehabilitación</h3>
+    <p>
+        Ofreciendo:
+    </p>
+    <ul>
+        <li>Información sobre prevención y riesgos.</li>
+        <li>Contenido educativo y motivacional.</li>
+        <li>Actividades prácticas para trabajar habilidades cognitivas.</li>
+    </ul>
+
+    <h3>Entorno de aprendizaje digital</h3>
+    <p>
+        Para que los usuarios:
+    </p>
+    <ul>
+        <li>Aprendan a usar herramientas básicas de tecnología.</li>
+        <li>Desarrollen habilidades útiles para su vida diaria, estudios o trabajo.</li>
+        <li>Faciliten su <strong>reinserción en la sociedad</strong>.</li>
+    </ul>
+
+    <h3>Entorno de práctica técnica</h3>
+    <p>
+        Para aprender:
+    </p>
+    <ul>
+        <li>Desarrollo web con Flask y Python.</li>
+        <li>Manejo de bases de datos con MongoDB.</li>
+        <li>Control de usuarios y permisos.</li>
+        <li>Integración de contenido multimedia (videos, imágenes, actividades).</li>
+    </ul>
+
+    <h3>Base para futuros proyectos</h3>
+    <p>
+        Como:
+    </p>
+    <ul>
+        <li>Una plataforma de acompañamiento en rehabilitación.</li>
+        <li>Un sistema de seguimiento de pacientes.</li>
+        <li>Un portal educativo especializado en salud mental, adicciones y formación digital.</li>
+    </ul>
+
+</div>
+
 </body>
 </html>
